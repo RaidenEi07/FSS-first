@@ -3,11 +3,19 @@ import 'customRow.dart';
 import 'BuildCell.dart';
 import 'footer.dart';
 import 'Stock.dart';
+import 'SelectionRow.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => SelectionRowModel()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
