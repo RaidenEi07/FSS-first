@@ -1,21 +1,10 @@
 import 'package:flutter/material.dart';
-import 'customRow.dart';
-import 'BuildCell.dart';
-import 'footer.dart';
-import 'Stock.dart';
-import 'SelectionRow.dart';
-import 'package:provider/provider.dart';
+import 'HomeScreen.dart';
 
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => SelectionRowModel()),
-      ],
-      child: MyApp(),
-    ),
-  );
+  runApp(const MyApp());
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -27,8 +16,8 @@ class MyApp extends StatelessWidget {
         primaryColor: const Color(0xFF28242C),
         scaffoldBackgroundColor: const Color(0xFF28242C),
         appBarTheme: const AppBarTheme(
-          backgroundColor: const Color(0xFF28242C),
-          titleTextStyle: const TextStyle(color: Colors.white, fontSize: 20),
+          backgroundColor: Color(0xFF28242C),
+          titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
         ),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
           backgroundColor: Colors.black,
@@ -36,59 +25,26 @@ class MyApp extends StatelessWidget {
           unselectedItemColor: Colors.grey,
         ),
       ),
-      home: Container(
-        child: HomeScreen(),
-      ),
+      home: const HomeScreen(),
     );
   }
 }
 
-class HomeScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('BIDV Security'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.refresh),
-            onPressed: () {
-              // Xử lý khi nhấn nút refresh
-            },
-          ),
-        ],
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(height: 20),
-            CustomRow(),
-            SizedBox(height: 20),
-            Container(
-              color: Colors.black,
-              padding: EdgeInsets.symmetric(vertical:12.0),
-              child:Padding(
-                padding: EdgeInsets.only(left: 10.0),
-                child: Row(
-                  children: [
-                    Expanded(child: buildCell('Cell 1', 'Bold Text', 'Red Text', 'Normal Text')),
-                    SizedBox(width: 20),
-                    Expanded(child: buildCell('Cell 2', 'Bold Text', 'Red Text', 'Normal Text')),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              child: StockApp(),
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: CustomFooter(),
-    );
-  }
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

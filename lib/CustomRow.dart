@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
+import 'Stock.dart';
+import 'NewScreen.dart';
 
-class CustomRow extends StatelessWidget {
+class CustomRow extends StatefulWidget {
+  final void Function(List<StockItem>) onStocksSelected;
+
+  CustomRow({required this.onStocksSelected});
+
+  @override
+  _CustomRowState createState() => _CustomRowState();
+}
+
+class _CustomRowState extends State<CustomRow> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -8,27 +19,40 @@ class CustomRow extends StatelessWidget {
       children: <Widget>[
         Container(
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.blue, width: 2), // Viền màu xanh
-            borderRadius: BorderRadius.circular(8), // Bo góc (tùy chọn)
+            border: Border.all(color: Colors.blue, width: 2),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.add, color: Colors.white),
+            onPressed: () async {
+              final selected = await Navigator.push<List<StockItem>>(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NewCategoryScreen(),
+                ),
+              );
+
+              if (selected != null) {
+                widget.onStocksSelected(selected);
+              }
+            },
+            icon: const Icon(Icons.add, color: Colors.white),
           ),
         ),
-        SizedBox(width: 20),
+        const SizedBox(width: 20),
         DropdownButtonHideUnderline(
           child: Container(
             height: 40,
-            padding: EdgeInsets.symmetric(horizontal: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.white),
               borderRadius: BorderRadius.circular(8),
             ),
             child: DropdownButton<String>(
-              hint: Text('Chưa có danh mục', style: TextStyle(color: Colors.white)),
+              hint: const Text('Chưa có danh mục',
+                  style: TextStyle(color: Colors.white)),
               dropdownColor: Colors.black,
-              items: <String>['Mục 1', 'Mục 2', 'Mục 3'].map((String value) {
+              items: <String>['Mục 1', 'Mục 2', 'Mục 3']
+                  .map((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),
@@ -40,19 +64,20 @@ class CustomRow extends StatelessWidget {
             ),
           ),
         ),
-
-        SizedBox(width: 20),
+        const SizedBox(width: 20),
         Container(
           decoration: BoxDecoration(
             color: Colors.lightBlueAccent,
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Padding (
+          child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child:DropdownButton<String>(
-              hint: Text('VNINDEX', style: TextStyle(color: Colors.white)),
+            child: DropdownButton<String>(
+              hint: const Text('VNINDEX',
+                  style: TextStyle(color: Colors.white)),
               dropdownColor: Colors.black,
-              items: <String>['Mục A', 'Mục B', 'Mục C'].map((String value) {
+              items: <String>['Mục A', 'Mục B', 'Mục C']
+                  .map((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),
