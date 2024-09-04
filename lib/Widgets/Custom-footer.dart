@@ -41,7 +41,7 @@ class _CustomFooterState extends State<CustomFooter> {
         ),
       ],
       currentIndex: _selectedIndex,
-      selectedItemColor: Colors.white ,
+      selectedItemColor: Colors.white,
       unselectedItemColor: Colors.grey,
       showSelectedLabels: true,
       showUnselectedLabels: true,

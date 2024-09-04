@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'Stock.dart';
+import 'package:provider/provider.dart';
+import 'package:no1/Models/Stock-item.dart';
+import 'package:no1/Provider/Stock-provider.dart';
+import 'package:no1/Widgets/Stock-list-title.dart';
 
 class NewCategoryScreen extends StatefulWidget {
   @override
@@ -12,12 +15,12 @@ class _NewCategoryScreenState extends State<NewCategoryScreen> {
     StockItem(code: 'A32', exchange: 'UPCOM', companyName: 'CTCP 32'),
     StockItem(code: 'AAA', exchange: 'HOSE', companyName: 'Công ty cổ phần Nhựa An Phát Xanh'),
     StockItem(code: 'BBB', exchange: 'CCCC', companyName: 'Công ty cổ phần Bruh An Phát Xanh'),
-    // Thêm các StockItem khác tại đây
   ];
-  final List<StockItem> selectedStocks = [];
 
   @override
   Widget build(BuildContext context) {
+    final stockProvider = Provider.of<StockProvider>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Thêm danh mục mới'),
@@ -34,55 +37,41 @@ class _NewCategoryScreenState extends State<NewCategoryScreen> {
               ),
             ),
             SizedBox(height: 16.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context, selectedStocks);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 16.0),
-                      backgroundColor: Colors.blue,
-                    ),
-                    child: Text('Xác nhận'),
-                  ),
-                ),
-                SizedBox(width: 8.0),
-                CircleAvatar(
-                  radius: 20.0,
-                  backgroundImage: AssetImage('assets/avatar.png'),
-                ),
-              ],
-            ),
-            SizedBox(height: 16.0),
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'Tìm kiếm',
-                prefixIcon: Icon(Icons.search),
-              ),
-            ),
-            SizedBox(height: 16.0),
             Expanded(
               child: ListView.builder(
                 itemCount: stocks.length,
                 itemBuilder: (context, index) {
+                  final stock = stocks[index];
+                  final isSelected = stockProvider.selectedStocks.contains(stock);
+
                   return StockListTile(
-                    stockItem: stocks[index],
-                    isSelected: selectedStocks.contains(stocks[index]),
-                    onSelected: (isSelected) {
+                    stockItem: stock,
+                    isSelected: isSelected,
+                    onSelected: (selected) {
                       setState(() {
-                        if (isSelected) {
-                          selectedStocks.add(stocks[index]);
+                        if (selected) {
+                          stockProvider.selectedStocks.add(stock);
                         } else {
-                          selectedStocks.remove(stocks[index]);
+                          stockProvider.selectedStocks.remove(stock);
                         }
+                        stockProvider.notifyListeners();
                       });
                     },
                   );
                 },
               ),
+            ),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () {
+                stockProvider.changeCategory(_categoryController.text);
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 16.0),
+                backgroundColor: Colors.blue,
+              ),
+              child: Text('Xác nhận'),
             ),
           ],
         ),

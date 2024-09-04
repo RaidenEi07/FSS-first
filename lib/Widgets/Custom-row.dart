@@ -1,17 +1,65 @@
 import 'package:flutter/material.dart';
-import 'Stock.dart';
-import 'NewScreen.dart';
+import 'package:no1/Models/Stock-item.dart';
+import 'package:no1/Display/New-Screen-Category.dart';
 
 class CustomRow extends StatefulWidget {
   final void Function(List<StockItem>) onStocksSelected;
+  final void Function(String?) onCategoryChanged;
+  final VoidCallback onClearStocks;
 
-  CustomRow({required this.onStocksSelected});
+  CustomRow({
+    required this.onStocksSelected,
+    required this.onCategoryChanged,
+    required this.onClearStocks,
+  });
 
   @override
   _CustomRowState createState() => _CustomRowState();
 }
 
 class _CustomRowState extends State<CustomRow> {
+  void _showBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: const Text('Thêm danh mục'),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final selected = await Navigator.push<List<StockItem>>(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NewCategoryScreen(),
+                    ),
+                  );
+
+                  if (selected != null) {
+                    widget.onStocksSelected(selected);
+                  }
+                },
+              ),
+              // Check if there is a current category
+              ListTile(
+                title: const Text('Xóa danh mục hiện tại'),
+                onTap: () {
+                  // Clear the selected stocks
+                  widget.onClearStocks();
+                  widget.onCategoryChanged(null); // Clear the current category
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -23,17 +71,8 @@ class _CustomRowState extends State<CustomRow> {
             borderRadius: BorderRadius.circular(8),
           ),
           child: IconButton(
-            onPressed: () async {
-              final selected = await Navigator.push<List<StockItem>>(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NewCategoryScreen(),
-                ),
-              );
-
-              if (selected != null) {
-                widget.onStocksSelected(selected);
-              }
+            onPressed: () {
+              _showBottomSheet(context);
             },
             icon: const Icon(Icons.add, color: Colors.white),
           ),
@@ -59,7 +98,7 @@ class _CustomRowState extends State<CustomRow> {
                 );
               }).toList(),
               onChanged: (String? newValue) {
-                // Xử lý khi chọn mục 1
+                // Handle selection
               },
             ),
           ),
@@ -84,7 +123,7 @@ class _CustomRowState extends State<CustomRow> {
                 );
               }).toList(),
               onChanged: (String? newValue) {
-                // Xử lý khi chọn mục 2
+                // Handle selection
               },
             ),
           ),

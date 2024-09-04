@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'CustomRow.dart';
-import 'Stock.dart';
-import 'SelectionRow.dart';
-import 'BuildCeil.dart';
-import 'CustomFooter.dart';
+import 'package:provider/provider.dart';
+import 'package:no1/Models/Stock-item.dart';
+import 'package:no1/Provider/Stock-provider.dart';
+import 'package:no1/Widgets//Custom-row.dart';
+import 'package:no1/Widgets//Selection-row.dart';
+import 'package:no1/Widgets//Custom-footer.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -14,9 +16,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<StockItem> selectedStocks = [];
+  String? currentCategory;
 
   @override
   Widget build(BuildContext context) {
+    final stockProvider = Provider.of<StockProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('BIDV Security'),
@@ -24,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              // Xử lý khi nhấn nút refresh
+              // Handle refresh
             },
           ),
         ],
@@ -35,44 +40,24 @@ class _HomeScreenState extends State<HomeScreen> {
           children: <Widget>[
             const SizedBox(height: 20),
             CustomRow(
-              onStocksSelected: (stocks) {
-                setState(() {
-                  selectedStocks = stocks;
-                });
-              },
-            ),
-            const SizedBox(height: 20),
-            Container(
-              color: Colors.black,
-              padding: const EdgeInsets.symmetric(vertical: 12.0),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: buildCell('Cell 1', 'Bold Text', 'Red Text',
-                            'Normal Text')),
-                    const SizedBox(width: 20),
-                    Expanded(
-                        child: buildCell('Cell 2', 'Bold Text', 'Red Text',
-                            'Normal Text')),
-                  ],
-                ),
-              ),
+              onStocksSelected: stockProvider.selectStocks,
+              onCategoryChanged: stockProvider.changeCategory,
+              onClearStocks: stockProvider.clearStocks,
             ),
             const SizedBox(height: 20),
             SelectionRow(
               onFirstButtonPressed: () {
                 print('First button pressed');
               },
+              selectedStocks: stockProvider.selectedStocks,
+              currentCategory: stockProvider.currentCategory,
             ),
             const SizedBox(height: 20),
-            // Hiển thị danh sách các mục đã chọn
             Expanded(
               child: ListView.builder(
-                itemCount: selectedStocks.length,
+                itemCount: stockProvider.selectedStocks.length,
                 itemBuilder: (context, index) {
-                  final stock = selectedStocks[index];
+                  final stock = stockProvider.selectedStocks[index];
                   return ListTile(
                     title: Text('${stock.code} | ${stock.exchange}'),
                     subtitle: Text(stock.companyName),
@@ -87,4 +72,5 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: CustomFooter(),
     );
   }
+
 }
