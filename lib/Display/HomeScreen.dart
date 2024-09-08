@@ -5,6 +5,7 @@ import 'package:no1/Provider/Stock-provider.dart';
 import 'package:no1/Widgets//Custom-row.dart';
 import 'package:no1/Widgets//Selection-row.dart';
 import 'package:no1/Widgets//Custom-footer.dart';
+import 'package:no1/Provider/Socket-provider.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -17,6 +18,20 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<StockItem> selectedStocks = [];
   String? currentCategory;
+
+  @override
+  void initState() {
+    super.initState();
+    // Connect to the socket
+    Provider.of<SocketProvider>(context, listen: false).connect();
+  }
+
+  @override
+  void dispose() {
+    // Disconnect from the socket when the screen is disposed
+    Provider.of<SocketProvider>(context, listen: false).disconnect();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

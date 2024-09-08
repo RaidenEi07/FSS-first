@@ -2,15 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:no1/Provider/Stock-provider.dart';
 import 'package:no1/Display/HomeScreen.dart';
+import 'package:no1/Provider/Socket-provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => StockProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => StockProvider()),
+        ChangeNotifierProvider(create: (_) => SocketProvider()), // Add SocketProvider
+      ],
       child: const MyApp(),
     ),
   );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
